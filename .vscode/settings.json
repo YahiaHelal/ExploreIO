@@ -8,5 +8,7 @@
         "**/obj": true,
         "**/bin": true
     },
-    "explorer.compactFolders": false
+    "explorer.compactFolders": false,
+    "csharpextensions.privateMemberPrefix": "_",
+    "csharpextensions.useThisForCtorAssignments": false
 }
