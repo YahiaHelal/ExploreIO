@@ -10,5 +10,6 @@
     },
     "explorer.compactFolders": false,
     "csharpextensions.privateMemberPrefix": "_",
-    "csharpextensions.useThisForCtorAssignments": false
+    "csharpextensions.useThisForCtorAssignments": false,
+    "angular.enable-strict-mode-prompt": false
 }

@@ -27,6 +27,7 @@ namespace API
             });
             // Controllers are instantiated via DI container.
             services.AddControllers();
+            services.AddCors(); // CORS policy
         }
 
         // Gets called by runtime, use it to configure Http request pipeline
@@ -41,6 +42,14 @@ namespace API
 
             // browser -> weatherforecast -> weatherforecastController
             app.UseRouting(); // router from endpoint to controller class
+
+            app.UseCors(policy =>
+            {
+                policy.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:4200"); // allow requests from your client
+                //allow any header: authentication, ...
+                //allow any method: post, get, put ... 
+                //withOrigin: address of the client origin
+            }); // CORS policy
 
             app.UseAuthorization();
 
