@@ -12,7 +12,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace API.Controllers
 {
-    public class AccountController: ControllerBase
+
+    public class AccountController: BaseApiController
     {
         private readonly DataContext _context;
         public AccountController(DataContext context)
@@ -24,19 +25,20 @@ namespace API.Controllers
         [HttpPost("register")]
         public async Task<ActionResult<AppUser>> Register(RegisterDto regDto)
         {
-            if(await exists(regDto.Username))
+            if(await exists(regDto.Username)) return Conflict(new
             {
-                return Conflict();
-            }
+                message = "Username already exists"
+            });
+            
             using var hmac = new HMACSHA512();
             var user = new AppUser
             {
-                UserName = regDto.Username,
+                UserName = regDto.Username.ToLower(),
                 PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(regDto.Password)),
                 PasswordSalt = hmac.Key
             };
-            _context.Users.Add(user);
-            await _context.SaveChangesAsync();
+            _context.Users.Add(user); // track that user with ef
+            await _context.SaveChangesAsync(); // actually save it to db
             return user;
         }
 
