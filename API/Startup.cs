@@ -45,7 +45,7 @@ namespace API
 
             app.UseCors(policy =>
             {
-                policy.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:4200"); // allow requests from your client
+                policy.AllowAnyHeader().AllowAnyMethod().WithOrigins("https://localhost:4200"); // allow requests from your client
                 //allow any header: authentication, ...
                 //allow any method: post, get, put ... 
                 //withOrigin: address of the client origin
