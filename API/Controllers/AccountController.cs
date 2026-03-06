@@ -23,7 +23,7 @@ namespace API.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<ActionResult<AppUser>> Register(RegisterDto regDto)
+        public async Task<ActionResult<AppUser>> RegisterAsync(RegisterDto regDto)
         {
             if(await exists(regDto.Username)) return Conflict(new
             {
@@ -39,6 +39,22 @@ namespace API.Controllers
             };
             _context.Users.Add(user); // track that user with ef
             await _context.SaveChangesAsync(); // actually save it to db
+            return user;
+        }
+
+        [HttpPost("login")]
+        public async Task<ActionResult<AppUser>> LoginAsync(LoginDto loginDto) 
+        {
+            var user = await _context.Users.SingleOrDefaultAsync(u => u.UserName == loginDto.Username.ToLower());
+            if(user == null) return Unauthorized("Invalid Username");
+            
+            using var hmac = new HMACSHA512(user.PasswordSalt);
+            var givenHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(loginDto.Password));
+            
+            for(int i = 0; i < givenHash.Length; i++)
+            {
+                if(givenHash[i] != user.PasswordHash[i]) return Unauthorized("Invalid Password");
+            }
             return user;
         }
 
