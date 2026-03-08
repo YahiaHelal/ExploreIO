@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using API.Data;
+using API.Extensions;
 using API.Interfaces;
 using API.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -26,29 +27,11 @@ namespace API
         // Takes care of creation/destruction of services classes (services scope -> Scoped, Transient, Singleton)
         public void ConfigureServices(IServiceCollection services)
         {
-            
-            services.AddScoped<ITokenService, TokenService>();
-            services.AddDbContext<DataContext>(options =>
-            {
-                options.UseSqlite(_config.GetConnectionString("DefaultConnection"));
-            });
+            services.AddApplicationServices(_config);
             // Controllers are instantiated via DI container.
             services.AddControllers();
             services.AddCors(); // CORS policy
-            
-            services
-            .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-            .AddJwtBearer(options =>
-            {
-                options.TokenValidationParameters = new TokenValidationParameters
-                {
-                    ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["TokenKey"])),
-                    ValidateIssuer = false, // api server
-                    ValidateAudience = false, // client (angular application)
-                };
-            });
-
+            services.AddIdentityServices(_config);
         }
 
         // Gets called by runtime, use it to configure Http request pipeline
