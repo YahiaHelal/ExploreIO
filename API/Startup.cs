@@ -1,17 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using API.Data;
 using API.Extensions;
-using API.Interfaces;
-using API.Services;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Sqlite;
-using Microsoft.IdentityModel.Tokens;
-
 namespace API
 {
     public class Startup
@@ -30,7 +17,7 @@ namespace API
             services.AddApplicationServices(_config);
             // Controllers are instantiated via DI container.
             services.AddControllers();
-            services.AddCors(); // CORS policy
+            services.AddCors(); // Cross-Origin-Resource-Sharing policy
             services.AddIdentityServices(_config);
         }
 
@@ -42,9 +29,8 @@ namespace API
                 app.UseDeveloperExceptionPage(); // styled page to show exception for devs
             }
             
-            app.UseHttpsRedirection(); // redirect to https if used http
+            app.UseHttpsRedirection();
 
-            // browser -> weatherforecast -> weatherforecastController
             app.UseRouting(); // router from endpoint to controller class
 
             app.UseCors(policy =>
@@ -61,7 +47,7 @@ namespace API
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllers(); // map each endpoint to it's controller
+                endpoints.MapControllers();
             });
         }
     }

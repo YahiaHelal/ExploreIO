@@ -16,16 +16,17 @@ namespace API.Services
         }
         public string CreateToken(AppUser user)
         {
+            var creds = new SigningCredentials(_key, SecurityAlgorithms.HmacSha512Signature);
             var claims = new List<Claim>()
             {
                 new Claim(JwtRegisteredClaimNames.NameId, user.UserName)
             };
-            var creds = new SigningCredentials(_key, SecurityAlgorithms.HmacSha512Signature);
+
             var tokenDescriptor = new SecurityTokenDescriptor()
             {
                 Subject = new ClaimsIdentity(claims),
                 Expires = DateTime.Now.AddDays(7),
-                SigningCredentials = creds
+                SigningCredentials = creds // comparing jwt tokens after signing it with the same signature that it's signed of [after decoding]
             };
             var tokenHandler = new JwtSecurityTokenHandler();
             var token = tokenHandler.CreateToken(tokenDescriptor);
@@ -33,3 +34,5 @@ namespace API.Services
         }
     }
 }
+
+// encoded jwt -> decoded jwt [header, payload, signature] -> [re-sign the payload and header with the signature you decoded] -> [if tokens are the same, then no one changed it in the way]
