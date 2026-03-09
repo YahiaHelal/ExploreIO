@@ -5,6 +5,7 @@
 
 #custom
 appsettings.json
+*.db
 
 
 # dotenv files
