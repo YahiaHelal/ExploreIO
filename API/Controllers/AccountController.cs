@@ -43,8 +43,8 @@ namespace API.Controllers
             await _context.SaveChangesAsync(); // actually save it to db
             return new UserDto()
             {
-              Username = user.UserName,
-              Token = _tokenService.CreateToken(user)  
+                Username = user.UserName,
+                Token = _tokenService.CreateToken(user)  
             };
         }
 
