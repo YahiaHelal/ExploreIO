@@ -1,19 +1,41 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import {map} from 'rxjs/operators'
+import { User } from '../_models/user';
+import { ReplaySubject } from 'rxjs';
 
-
-// singleton, when injected it's a single instance per application 
+// singleton, when injected it's a single instance per application
 @Injectable({
   providedIn: 'root'
 })
 
 // requests api/account
 export class AccountService {
-  baseUrl = "https://localhost:5001/api/"
+  baseUrl = "https://localhost:5001/api/";
+  private currentUserSource = new ReplaySubject<User>(1);
+  currentUser$ = this.currentUserSource.asObservable();
 
   constructor(private http: HttpClient) { }
 
   login(model: any) {
-    return this.http.post(this.baseUrl + 'account/login', model)
+    return this.http.post(this.baseUrl + 'account/login', model).pipe(
+      map((resp: User) => {
+        const user = resp;
+        if(user) {
+          localStorage.setItem('user', JSON.stringify(user))
+          this.currentUserSource.next(user);
+        }
+      })
+    )
   }
+
+  logout() {
+    localStorage.removeItem('user');
+    this.currentUserSource.next(null);
+  }
+
+  setCurrentUser(user: User) {
+    this.currentUserSource.next(user);
+  }
+  
 }
