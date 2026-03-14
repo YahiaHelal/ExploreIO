@@ -47,8 +47,4 @@ export class AccountService {
     })
   }
 
-  cancel() {
-    console.log('Cancelled');
-  }
-
 }
