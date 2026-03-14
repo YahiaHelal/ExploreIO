@@ -7,17 +7,21 @@ import { AccountService } from '../_services/account.service';
   styleUrls: ['./register.component.css']
 })
 export class RegisterComponent implements OnInit {
-  @Input() usersFromHomeComponent: any;
   @Output() cancelRegister = new EventEmitter();
   model: any = {};
 
-  constructor(public accountService: AccountService) { }
+  constructor(private accountService: AccountService) { }
 
   ngOnInit(): void {
   }
 
   register() {
-    this.accountService.register(this.model);
+    this.accountService.register(this.model).subscribe(resp => {
+      console.log(resp)
+      this.cancel();
+    }, err => {
+      console.log(err)
+    })
   }
 
   cancel() {

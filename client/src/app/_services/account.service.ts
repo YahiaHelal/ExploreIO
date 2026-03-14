@@ -39,12 +39,14 @@ export class AccountService {
   }
 
   register(model: any) {
-    // console.log(model);
-    return this.http.post(this.baseUrl + 'account/register', model).subscribe(resp => {
-      console.log(resp);
-    }, err => {
-      console.log(err);
-    })
+    return this.http.post(this.baseUrl + 'account/register', model).pipe(
+      map((user: User) => {
+        if(user) {
+          localStorage.setItem('user', JSON.stringify(user))
+          this.currentUserSource.next(user);
+        }
+      })
+    )
   }
 
 }
