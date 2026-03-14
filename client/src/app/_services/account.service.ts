@@ -37,5 +37,18 @@ export class AccountService {
   setCurrentUser(user: User) {
     this.currentUserSource.next(user);
   }
-  
+
+  register(model: any) {
+    // console.log(model);
+    return this.http.post(this.baseUrl + 'account/register', model).subscribe(resp => {
+      console.log(resp);
+    }, err => {
+      console.log(err);
+    })
+  }
+
+  cancel() {
+    console.log('Cancelled');
+  }
+
 }
