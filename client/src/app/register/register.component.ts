@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { AccountService } from '../_services/account.service';
 
 @Component({
@@ -7,6 +7,7 @@ import { AccountService } from '../_services/account.service';
   styleUrls: ['./register.component.css']
 })
 export class RegisterComponent implements OnInit {
+  @Input() usersFromHomeComponent: any;
   model: any = {};
 
   constructor(public accountService: AccountService) { }
