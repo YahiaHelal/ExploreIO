@@ -24,10 +24,7 @@ namespace API.Controllers
         [HttpPost("register")]
         public async Task<ActionResult<UserDto>> RegisterAsync(RegisterDto regDto)
         {
-            if(await exists(regDto.Username)) return Conflict(new
-            {
-                message = "Username already exists"
-            });
+            if(await exists(regDto.Username)) return Conflict("Username already exists");
             
             using var hmac = new HMACSHA512();
             
