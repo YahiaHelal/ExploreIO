@@ -1,4 +1,5 @@
 using API.Extensions;
+using API.Middleware;
 namespace API
 {
     public class Startup
@@ -24,11 +25,7 @@ namespace API
         // Gets called by runtime, use it to configure Http request pipeline
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if(env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage(); // styled page to show exception for devs
-            }
-            
+            app.UseMiddleware<ExceptionMiddleware>();         
             app.UseHttpsRedirection();
 
             app.UseRouting(); // router from endpoint to controller class
