@@ -24,7 +24,6 @@ namespace API.Controllers
         {
             return "secret text";
         }
-        [Authorize]
         [HttpGet("not-found")]
         public ActionResult<AppUser> GetNotFound()
         {
@@ -33,15 +32,14 @@ namespace API.Controllers
             return Ok(x); 
         }
         
-        [Authorize]
         [HttpGet("server-error")]
         public ActionResult<string> GetServerError()
         {
+            
             var x = _context.Users.Find(-1);
             var ret = x.ToString(); // NullReferenceException
             return ret;
         }
-        [Authorize]
         [HttpGet("bad-request")]
         public ActionResult<string> GetBadRequest()
         {
