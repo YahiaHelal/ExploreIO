@@ -1,0 +1,17 @@
+<h4>Internal Server Error - Consider refreshing the page!</h4>
+<ng-container *ngIf="error">
+  <h5 class="text-danger">Error: {{error.message}}</h5>
+  <p>If you're seeing this, client is mostly innocent, we ran into a server issue</p>
+  <p>What to do next?</p>
+  <ol>
+    <li>Open chrome dev tools</li>
+    <li>Inspect the network tab</li>
+    <li>Check the failing requeust</li>
+    <li>Examine the request url - make sure it's correct</li>
+    <li>Re-produce the error in postman</li>
+  </ol>
+  <p>Follwing is the stack trace - this is where your investigation should start</p>
+  <code class="mt-5" style="background-color: whitesmoke;">
+    {{error.details}}
+  </code>
+</ng-container>
