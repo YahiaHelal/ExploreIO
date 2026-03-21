@@ -7,10 +7,20 @@ namespace API.Entities
 {
     public class AppUser
     {
-        // public fields in order to let EF Core get and set them
-        public int Id { get; set; } // has to be named Id in order for EF core to recognize it
+        public int Id { get; set; } 
         public string UserName{ get; set; } // to avoid collison with AspNetCoreIdentity -> has Username field
         public byte[] PasswordHash{ get; set; }
         public byte[] PasswordSalt{ get; set; }
+        public DateTime DateOfBirth { get; set; }
+        public string KnownAs { get; set; }
+        public DateTime CreatedAt { get; set; } = DateTime.Now;
+        public DateTime LastActive { get; set; } = DateTime.Now;
+        public string Gender { get; set; }
+        public string Introduction { get; set; }
+        public string Interests { get; set; }
+        public string City { get; set; }
+        public string Country { get; set; }
+        public ICollection<Photo> Photos { get; set; }
     }
+
 }
