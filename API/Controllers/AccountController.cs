@@ -24,9 +24,7 @@ namespace API.Controllers
         [HttpPost("register")]
         public async Task<ActionResult<UserDto>> RegisterAsync(RegisterDto regDto)
         {
-            if(await exists(regDto.Username)) return Conflict(new {
-                message = "Useranem already exists"
-            });
+            if(await exists(regDto.Username)) return Conflict("Useranem already exists");
             
             using var hmac = new HMACSHA512();
             
@@ -51,20 +49,14 @@ namespace API.Controllers
         public async Task<ActionResult<UserDto>> LoginAsync(LoginDto loginDto) 
         {
             var user = await _context.Users.SingleOrDefaultAsync(u => u.UserName == loginDto.Username.ToLower());
-            if(user == null) return Unauthorized(new
-            {
-                message = "Invalid Username"
-            });
+            if(user == null) return Unauthorized("Invalid Username");
             
             using var hmac = new HMACSHA512(user.PasswordSalt);
             var givenHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(loginDto.Password));
             
             for(int i = 0; i < givenHash.Length; i++)
             {
-                if(givenHash[i] != user.PasswordHash[i]) return Unauthorized(new
-                {
-                    message = "Invalid Password"
-                });
+                if(givenHash[i] != user.PasswordHash[i]) return Unauthorized("Invalid Password");
             }
 
             return new UserDto()

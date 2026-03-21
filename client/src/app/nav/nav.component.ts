@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AccountService } from '../_services/account.service';
 import { Router } from '@angular/router';
-import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-nav',
@@ -13,8 +12,7 @@ export class NavComponent implements OnInit {
 
   constructor(
     public accountService: AccountService,
-    private router: Router,
-    private toastr: ToastrService) { }
+    private router: Router) { }
 
   ngOnInit(): void {
   }
@@ -25,7 +23,6 @@ export class NavComponent implements OnInit {
       this.router.navigateByUrl('/members');
     }, err => {
       console.log(err);
-      this.toastr.error(err.error.message);
     })
   }
 
