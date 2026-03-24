@@ -9,8 +9,9 @@ namespace API.DTOs
     public class MemberDto
     {
         public int Id { get; set; } 
-        public string UserName{ get; set; } // to avoid collison with AspNetCoreIdentity -> has Username field
-        public int Age { get; set; }
+        public string Username{ get; set; }
+        public string PhotoUrl { get; set; } // Main photo url
+        public int Age { get; set; } // calls GetAge()
         public string KnownAs { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime LastActive { get; set; }
