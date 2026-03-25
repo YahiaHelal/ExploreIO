@@ -18,7 +18,7 @@ namespace API.Helpers
                 .ForMember(dest => dest.PhotoUrl, ops =>
                     ops.MapFrom(src => src.Photos.FirstOrDefault(photo => photo.IsMain).Url))
                 .ForMember(dest => dest.Age, ops =>
-                    ops.MapFrom(src => src.DateOfBirth.CalculateAge())); // to not let the mapper call the AppUser
+                    ops.MapFrom(src => src.DateOfBirth.CalculateAge())); // to not let auto mapper call the AppUser with all it's properties
             CreateMap<Photo, PhotoDto>();
         }
     }
