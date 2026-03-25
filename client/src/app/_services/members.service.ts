@@ -5,7 +5,7 @@ import { Member } from '../_models/member';
 
 const httpOptions = {
   headers: new HttpHeaders({
-    Authorization: 'Bearer ' + JSON.parse(localStorage.getItem('user')).token
+    Authorization: 'Bearer ' + JSON.parse(localStorage.getItem('user'))?.token
   })
 }
 
@@ -13,7 +13,7 @@ const httpOptions = {
   providedIn: 'root'
 })
 export class MembersService {
-  baseUrl = environment.apiUrl
+  private baseUrl = environment.apiUrl
   constructor(private httpClient: HttpClient) { }
 
   getMembers() {
