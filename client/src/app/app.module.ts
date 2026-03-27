@@ -27,13 +27,13 @@ import { JwtInterceptor } from './_interceptors/jwt.interceptor';
     HomeComponent,
     RegisterComponent,
     MemberListComponent,
-    MemberDetailComponent,
+  MemberDetailComponent,
     ExploreComponent,
     MessagesComponent,
     TestErrorsComponent,
     NotFoundComponent,
     ServerErrorComponent,
-    MemberCardComponent
+    MemberCardComponent,
   ],
   imports: [
     BrowserModule,
