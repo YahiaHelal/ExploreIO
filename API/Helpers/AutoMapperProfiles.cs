@@ -20,6 +20,7 @@ namespace API.Helpers
                 .ForMember(dest => dest.Age, ops =>
                     ops.MapFrom(src => src.DateOfBirth.CalculateAge())); // to not let auto mapper call the AppUser with all it's properties
             CreateMap<Photo, PhotoDto>();
+            CreateMap<MemberUpdateDto, AppUser>();
         }
     }
 }
