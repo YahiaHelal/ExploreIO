@@ -69,11 +69,13 @@ namespace API.Controllers
             return BadRequest("A problem occured while adding photo");
         }
 
-        [HttpPut("set-main-photo/{photo-id}")]
-        public async Task<ActionResult> UpdatePhoto(int photoId)
+        [HttpPut("set-main-photo/{photoId}")]
+        public async Task<ActionResult> SetMainPhoto(int photoId)
         {
             var user = await _userRepository.GetUserByUsernameAsync(User.GetUsername());
+
             var photo = user.Photos.FirstOrDefault(p => p.Id == photoId);
+            
             if(photo.IsMain) return BadRequest("This is already your main photo");
             
             var currentMain = user.Photos.FirstOrDefault(p => p.IsMain);
