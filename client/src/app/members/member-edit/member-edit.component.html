@@ -1,65 +1,90 @@
-<div class="row" *ngIf="member">
-  <div class="col-4">
-    <h1>Your Profile</h1>
-  </div>
-  <div class="col-8">
-    <div class="alert alert-info" *ngIf="editForm.dirty">
-      <strong>Information: </strong> You have made changes. Any Unsaved changes will be lost
+<div class="profile-edit-wrapper" *ngIf="member">
+
+  <!-- Header Row -->
+  <div class="profile-header">
+    <h1 class="profile-title">Your Profile</h1>
+    <div class="unsaved-alert" *ngIf="editForm.dirty">
+      <i class="fa fa-info-circle"></i>
+      You have unsaved changes — these will be lost if you navigate away.
     </div>
   </div>
-  <div class="col-4">
-    <div class="card">
-      <img src="{{member.photoUrl || './assets/user.png'}}" alt="{{member.knownAs}}"
-        class="card-img-top img-thumbnail">
-      <div class="card-body">
-        <div>
-          <strong>Location:</strong>
-          <p>{{member.city}}, {{member.country}}</p>
-        </div>
-        <div>
-          <strong>Age:</strong>
-          <p>{{member.age}}</p>
-        </div>
-        <div>
-          <strong>Last Active:</strong>
-          <p>{{member.lastActive}}</p>
-        </div>
-        <div>
-          <strong>Member since:</strong>
-          <p>{{member.createdAt}}</p>
-        </div>
-      </div>
 
-      <div class="card-footer">
-          <button class="btn btn-success btn-block" type="submit"
-            form="editForm" [disabled]="!editForm.dirty">Save Changes</button>
-      </div>
-    </div>
-  </div>
-  <div class="col-8">
-    <tabset class="member-tabset">
-      <tab heading="About" {{member.knownAs}}>
-        <form id="editForm" #editForm="ngForm" (ngSubmit)="updateMember()" autocomplete="off">
-          <h4>Description</h4>
-          <textarea class="form-control" [(ngModel)]="member.introduction" name="introduction" rows="6"></textarea>
+  <div class="profile-layout">
 
-          <h4 mt-2>Interests</h4>
-          <textarea class="form-control" [(ngModel)]="member.interests" name="interests" rows="6"></textarea>
-
-          <h4 class="mt-2">Location Details</h4>
-          <div class="form-inline">
-            <label for="city">City: </label>
-            <input [(ngModel)]="member.city" type="text" name="city" class="form-control mx-2">
-
-            <label for="country">Country: </label>
-            <input [(ngModel)]="member.country" type="text" name="country" class="form-control mx-2">
+    <aside class="profile-sidebar">
+      <div class="profile-card">
+        <div class="profile-img-wrap">
+          <img [src]="member.photoUrl || './assets/user.png'" [alt]="member.knownAs" class="profile-img" />
+        </div>
+        <div class="profile-meta">
+          <div class="meta-row">
+            <span class="meta-label"><i class="fa fa-map-marker"></i> Location</span>
+            <span class="meta-value">{{ member.city }}, {{ member.country }}</span>
           </div>
-        </form>
+          <div class="meta-row">
+            <span class="meta-label"><i class="fa fa-birthday-cake"></i> Age</span>
+            <span class="meta-value">{{ member.age }}</span>
+          </div>
+          <div class="meta-row">
+            <span class="meta-label"><i class="fa fa-clock-o"></i> Last Active</span>
+            <span class="meta-value">{{ member.lastActive }}</span>
+          </div>
+          <div class="meta-row">
+            <span class="meta-label"><i class="fa fa-calendar"></i> Member Since</span>
+            <span class="meta-value">{{ member.createdAt }}</span>
+          </div>
+        </div>
+        <div class="profile-card-footer">
+          <button class="btn-save" type="submit" form="editForm" [disabled]="!editForm.dirty">
+            <i class="fa fa-save"></i> Save Changes
+          </button>
+        </div>
+      </div>
+    </aside>
 
-      </tab>
-      <tab heading="Edit Photos">
-        <app-photo-editor [member]="member"></app-photo-editor>
-      </tab>
-    </tabset>
+    <div class="profile-content">
+      <tabset class="member-tabset">
+
+        <tab heading="About {{ member.knownAs }}">
+          <form id="editForm" #editForm="ngForm" (ngSubmit)="updateMember()" autocomplete="off">
+
+            <div class="form-section">
+              <label class="form-label">Description</label>
+              <textarea class="form-textarea" [(ngModel)]="member.introduction" name="introduction" rows="5"
+                placeholder="Tell others about yourself..."></textarea>
+            </div>
+
+            <div class="form-section">
+              <label class="form-label">Interests</label>
+              <textarea class="form-textarea" [(ngModel)]="member.interests" name="interests" rows="5"
+                placeholder="What are you into?"></textarea>
+            </div>
+
+            <div class="form-section">
+              <label class="form-label">Location Details</label>
+              <div class="location-row">
+                <div class="location-field">
+                  <label class="input-label" for="city">City</label>
+                  <input [(ngModel)]="member.city" type="text" id="city" name="city"
+                    class="form-input" placeholder="Your city" />
+                </div>
+                <div class="location-field">
+                  <label class="input-label" for="country">Country</label>
+                  <input [(ngModel)]="member.country" type="text" id="country" name="country"
+                    class="form-input" placeholder="Your country" />
+                </div>
+              </div>
+            </div>
+
+          </form>
+        </tab>
+
+        <tab heading="Edit Photos">
+          <app-photo-editor [member]="member"></app-photo-editor>
+        </tab>
+
+      </tabset>
+    </div>
+
   </div>
 </div>
