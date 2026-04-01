@@ -45,4 +45,8 @@ export class MembersService { // can work as a state store since it's singleton,
   setMainPhoto(photoId: number) {
     return this.httpClient.put(this.baseUrl + 'users/set-main-photo/' + photoId, {});
   }
+
+  deletePhoto(photoId: number) {
+    return this.httpClient.delete(this.baseUrl + 'users/delete-photo/' + photoId);
+  }
 }
