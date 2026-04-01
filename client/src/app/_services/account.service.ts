@@ -5,7 +5,6 @@ import { User } from '../_models/user';
 import { ReplaySubject } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
-// singleton, when injected it's a single instance per application
 @Injectable({
   providedIn: 'root'
 })
@@ -23,8 +22,7 @@ export class AccountService {
       map((resp: User) => {
         const user = resp;
         if(user) {
-          localStorage.setItem('user', JSON.stringify(user))
-          this.currentUserSource.next(user);
+          this.setCurrentUser(user);
         }
       })
     )
@@ -36,6 +34,7 @@ export class AccountService {
   }
 
   setCurrentUser(user: User) {
+    localStorage.setItem('user', JSON.stringify(user))
     this.currentUserSource.next(user);
   }
 
@@ -43,8 +42,7 @@ export class AccountService {
     return this.http.post(this.baseUrl + 'account/register', model).pipe(
       map((user: User) => {
         if(user) {
-          localStorage.setItem('user', JSON.stringify(user))
-          this.currentUserSource.next(user);
+         this.setCurrentUser(user);
         }
       })
     )

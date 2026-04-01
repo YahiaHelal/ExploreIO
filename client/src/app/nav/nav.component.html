@@ -25,7 +25,8 @@
     </ul>
 
     <div class="dropdown" *ngIf="(accountService.currentUser$ | async) as user" dropdown>
-      <a class="dropdown-toggle text-light" dropdownToggle>Welcome {{user.username| titlecase}}</a>
+      <img src="{{user.photoUrl}}" alt="{{user.username}}">
+      <a class="dropdown-toggle text-light ml-2" dropdownToggle>Welcome {{user.username| titlecase}}</a>
       <div class="dropdown-menu mt-3" *dropdownMenu>
         <a routerLink="/member/edit" class="dropdown-item">Edit Profile</a>
         <div class="dropdown-divder"></div>
@@ -33,7 +34,7 @@
       </div>
     </div>
 
-    <!--may add seach bar to seach for pins later-->
+
     <form *ngIf="(accountService.currentUser$ | async) === null" #loginForm="ngForm" class="form-inline mt-2 mt-md-0" (ngSubmit)="login()" autocomplete="off">
       <input
         name="username"
