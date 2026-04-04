@@ -21,6 +21,7 @@ namespace API.Helpers
                     ops.MapFrom(src => src.DateOfBirth.CalculateAge())); // to not let auto mapper call the AppUser with all it's properties
             CreateMap<Photo, PhotoDto>();
             CreateMap<MemberUpdateDto, AppUser>();
+            CreateMap<RegisterDto, AppUser>();
         }
     }
 }
