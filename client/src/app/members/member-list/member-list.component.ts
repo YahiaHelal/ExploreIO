@@ -21,6 +21,11 @@ export class MemberListComponent implements OnInit {
     this.loadMembers();
   }
 
+  pageChanged(event: any) {
+    this.pageNumber = event.page;
+    this.loadMembers()
+  }
+
   loadMembers() {
     this.membersService.getMembers(this.pageNumber, this.pageSize).subscribe(resp => {
       this.members = resp.result;
