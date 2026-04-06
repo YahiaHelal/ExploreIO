@@ -31,7 +31,13 @@ namespace API.Data
             var query = _context.Users.AsQueryable();
 
             query = query.Where(u => u.UserName != userParams.CurrentUsername);
-            
+
+            query = userParams.OrderBy switch
+            {
+                "createdAt" => query.OrderByDescending(u => u.CreatedAt),
+                _ => query.OrderByDescending(u => u.LastActive)
+            };
+
             return await PagedList<MemberDto>.CreateAsync(
                 query.ProjectTo<MemberDto>(_mapper.ConfigurationProvider).AsNoTracking(),
                 userParams.PageNumber, userParams.PageSize);

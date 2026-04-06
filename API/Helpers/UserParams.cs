@@ -18,5 +18,6 @@ namespace API.Helpers
         }
 
         public string CurrentUsername { get; set; }
+        public string OrderBy { get; set; } = "lastActive";
     }
 }
