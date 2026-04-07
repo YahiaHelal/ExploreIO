@@ -15,6 +15,8 @@ export class MembersService { // can work as a state store since it's singleton,
   private baseUrl = environment.apiUrl;
   members: Member[] = [];
   userParams: UserParams | undefined;
+  membersCache = new Map();
+  memberCache = new Map();
 
   constructor(private httpClient: HttpClient) {
     this.userParams = new UserParams();
@@ -32,16 +34,25 @@ export class MembersService { // can work as a state store since it's singleton,
   }
 
   getMembers(userParams: UserParams) {
+    var val = Object.values(userParams).join('-');
+    var resp = this.membersCache.get(val);
+    if(resp) {
+      return of(resp);
+    }
     let params = this.getPaginationHeaders(userParams.pageNumber, userParams.pageSize);
     params = params.append('orderBy', userParams.orderBy);
-
-    return this.getPaginatedResult<Member[]>(this.baseUrl + 'users', params)
+    return this.getPaginatedResult<Member[]>(this.baseUrl + 'users', params).pipe(
+      map(resp => {
+        this.membersCache.set(val, resp);
+        return resp;
+      })
+    )
   }
 
   getMember(username: string) {
     const member = this.members.find(mem => mem.username === username);
     if(member !== undefined) return of(member);
-    return this.httpClient.get<Member>(this.baseUrl + 'users/' + username);
+    return this.httpClient.get<Member>(this.baseUrl + 'users/' + username)
   }
 
   updateMember(member: Member) {
@@ -62,7 +73,7 @@ export class MembersService { // can work as a state store since it's singleton,
   }
 
 
-   private getPaginatedResult<T>(url, params) {
+  private getPaginatedResult<T>(url, params) {
     const paginatedResult: PaginatedResult<T>  = new PaginatedResult<T>();
 
     return this.httpClient.get<T>(url, { observe: 'response', params }).pipe(
