@@ -3,9 +3,10 @@ import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { Member } from '../_models/member';
 import { of } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, take } from 'rxjs/operators';
 import { PaginatedResult } from '../_models/pagination';
 import { UserParams } from '../_models/userParams';
+import { AccountService } from './account.service';
 
 
 @Injectable({
@@ -17,13 +18,16 @@ export class MembersService { // can work as a state store since it's singleton,
   userParams: UserParams | undefined;
   membersCache = new Map();
 
-  constructor(private httpClient: HttpClient) {
-    this.userParams = new UserParams();
+  constructor(private httpClient: HttpClient, private accountService: AccountService) {
+    this.accountService.currentUser$.pipe(take(1)).subscribe(()=> {
+      this.userParams = new UserParams();
+    })
   }
 
   getUserParams() {
     return this.userParams;
   }
+  
   setUserParams(userParams: UserParams) {
     this.userParams = userParams;
   }
@@ -54,7 +58,7 @@ export class MembersService { // can work as a state store since it's singleton,
       .reduce((prev, curr) => prev.concat(curr.result), [])
       .find((mem: Member) => mem.username === username)
     if(member) return of(member);
-    
+
     return this.httpClient.get<Member>(this.baseUrl + 'users/' + username)
   }
 

@@ -24,6 +24,7 @@ export class MemberListComponent implements OnInit {
   }
 
   loadMembers() {
+    this.membersService.setUserParams(this.userParams);
     if(this.userParams) {
       this.membersService.setUserParams(this.userParams);
       this.membersService.getMembers(this.userParams).subscribe({
@@ -38,8 +39,8 @@ export class MemberListComponent implements OnInit {
 
   pageChanged(event: any) {
     if(this.userParams && this.userParams?.pageNumber !== event.page) {
-      this.membersService.setUserParams(this.userParams);
       this.userParams.pageNumber = event.page;
+      this.membersService.setUserParams(this.userParams);
       this.loadMembers()
     }
   }
