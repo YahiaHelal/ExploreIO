@@ -16,7 +16,6 @@ export class MembersService { // can work as a state store since it's singleton,
   members: Member[] = [];
   userParams: UserParams | undefined;
   membersCache = new Map();
-  memberCache = new Map();
 
   constructor(private httpClient: HttpClient) {
     this.userParams = new UserParams();
@@ -50,8 +49,12 @@ export class MembersService { // can work as a state store since it's singleton,
   }
 
   getMember(username: string) {
-    const member = this.members.find(mem => mem.username === username);
-    if(member !== undefined) return of(member);
+    // console.log(this.membersCache);
+    const member = [...this.membersCache.values()]
+      .reduce((prev, curr) => prev.concat(curr.result), [])
+      .find((mem: Member) => mem.username === username)
+    if(member) return of(member);
+    
     return this.httpClient.get<Member>(this.baseUrl + 'users/' + username)
   }
 
