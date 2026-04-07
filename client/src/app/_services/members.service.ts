@@ -14,12 +14,26 @@ import { UserParams } from '../_models/userParams';
 export class MembersService { // can work as a state store since it's singleton, instead of using redux
   private baseUrl = environment.apiUrl;
   members: Member[] = [];
+  userParams: UserParams | undefined;
 
+  constructor(private httpClient: HttpClient) {
+    this.userParams = new UserParams();
+  }
 
-  constructor(private httpClient: HttpClient) { }
+  getUserParams() {
+    return this.userParams;
+  }
+  setUserParams(userParams: UserParams) {
+    this.userParams = userParams;
+  }
+  resetUserParams() {
+    this.userParams = new UserParams();
+    return this.userParams;
+  }
 
   getMembers(userParams: UserParams) {
     let params = this.getPaginationHeaders(userParams.pageNumber, userParams.pageSize);
+    params = params.append('orderBy', userParams.orderBy);
 
     return this.getPaginatedResult<Member[]>(this.baseUrl + 'users', params)
   }
