@@ -19,5 +19,26 @@ namespace API.Data
         {
         }
         public DbSet<AppUser> Users {get;set;}
+        public DbSet<UserFollow> Followings { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            base.OnModelCreating(builder);
+
+            builder.Entity<UserFollow>()
+                .HasKey(k => new {k.SourceUserId, k.FollowedUserId});
+            
+            builder.Entity<UserFollow>()
+                .HasOne(s => s.SourceUser)
+                .WithMany(f => f.FollowedUsers)
+                .HasForeignKey(s => s.SourceUserId)
+                .OnDelete(DeleteBehavior.Cascade);
+            
+            builder.Entity<UserFollow>()
+                .HasOne(s => s.FollowedUesr)
+                .WithMany(f => f.UserFollowings)
+                .HasForeignKey(s => s.FollowedUserId)
+                .OnDelete(DeleteBehavior.Cascade);
+        }
     }
 }

@@ -23,10 +23,8 @@ namespace API.Entities
         public string Country { get; set; }
         public ICollection<Photo> Photos { get; set; }
 
-        // public int GetAge()
-        // {
-        //     return DateOfBirth.CalculateAge();
-        // }
+        public ICollection<UserFollow> UserFollowings { get; set; } // users following the current logged in user
+        public ICollection<UserFollow> FollowedUsers { get; set; } // users the current user follow
     }
 
 }

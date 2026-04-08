@@ -27,7 +27,7 @@ export class MembersService { // can work as a state store since it's singleton,
   getUserParams() {
     return this.userParams;
   }
-  
+
   setUserParams(userParams: UserParams) {
     this.userParams = userParams;
   }
@@ -53,7 +53,6 @@ export class MembersService { // can work as a state store since it's singleton,
   }
 
   getMember(username: string) {
-    // console.log(this.membersCache);
     const member = [...this.membersCache.values()]
       .reduce((prev, curr) => prev.concat(curr.result), [])
       .find((mem: Member) => mem.username === username)
