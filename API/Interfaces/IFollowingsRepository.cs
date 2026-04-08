@@ -11,6 +11,6 @@ namespace API.Interfaces
     {
         Task<UserFollow> GetUserFollow(int sourceUserId, int followedUserId);
         Task<AppUser> GetUserWithFollowings(int userId);
-        Task<IEnumerable<FollowDto>> GetUserFollowings(string predicate, int userId); // followed / followed by user
+        Task<IEnumerable<FollowDto>> GetUserFollowings(string predicate, int userId); // follows / follwed by
     }
 }

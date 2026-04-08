@@ -4,7 +4,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using API.DTOs;
 using API.Entities;
+using API.Extensions;
 using API.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace API.Data
 {
@@ -15,19 +17,43 @@ namespace API.Data
         {
             _context = context;
         }
-        public Task<UserFollow> GetUserFollow(int sourceUserId, int followedUserId)
+        public async Task<UserFollow> GetUserFollow(int sourceUserId, int followedUserId)
         {
-            throw new NotImplementedException();
+            return await _context.Followings.FindAsync(sourceUserId, followedUserId);
         }
 
-        public Task<IEnumerable<FollowDto>> GetUserFollowings(string predicate, int userId)
+        // predicate => either user followers or user followed by 
+        public async Task<IEnumerable<FollowDto>> GetUserFollowings(string predicate, int userId)
         {
-            throw new NotImplementedException();
+            var users = _context.Users.OrderBy(u => u.UserName).AsQueryable(); 
+            var followings = _context.Followings.AsQueryable();
+            
+            if(predicate == "followed")
+            {
+                followings = followings.Where(follow => follow.SourceUserId == userId);
+                users = followings.Select(follow => follow.FollowedUesr);
+            }
+            if(predicate == "followedBy")
+            {
+                followings = followings.Where(follow => follow.FollowedUserId == userId);
+                users = followings.Select(follow => follow.SourceUser);
+            }
+            return await users.Select(user => new FollowDto
+            {
+                Username = user.UserName,
+                KnownAs = user.KnownAs,
+                Age = user.DateOfBirth.CalculateAge(),
+                PhotoUrl = user.Photos.FirstOrDefault(p => p.IsMain).Url,
+                City = user.City,
+                Id = user.Id
+            }).ToListAsync();
         }
 
-        public Task<AppUser> GetUserWithFollowings(int userId)
+        public async Task<AppUser> GetUserWithFollowings(int userId)
         {
-            throw new NotImplementedException();
+            return await _context.Users
+                .Include(u => u.FollowedUsers)
+                .FirstOrDefaultAsync(u => u.Id == userId);
         }
     }
 }
