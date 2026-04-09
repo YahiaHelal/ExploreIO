@@ -112,5 +112,8 @@ namespace API.Controllers
             if(await _userRepository.SaveAllAsync()) return Ok();
             return BadRequest("Failed to delete photo");
         }
+
+
+        // TODO: delete user account
     }
 }

@@ -30,7 +30,7 @@ namespace API.Controllers
 
             var userFollow = await _followingsRepository.GetUserFollow(sourceUserId, followedUser.Id);
 
-            if(userFollow != null) return BadRequest("You're already following that user");
+            if(userFollow != null) return BadRequest("You're already following this user");
 
             userFollow = new UserFollow
             {
@@ -50,6 +50,25 @@ namespace API.Controllers
             var users = await _followingsRepository.GetUserFollowings(predicate, User.GetUserId());
             return Ok(users);
         }
+
+        [HttpDelete("{username}")]
+        public async Task<ActionResult> RemoveFollow(string username)
+        {
+            var sourceUserId = User.GetUserId();
+            var sourceUser = await _followingsRepository.GetUserWithFollowings(sourceUserId);
+            var followedUser = await _userRepository.GetUserByUsernameAsync(username);
+
+            if(followedUser == null) return NotFound();
+            if(sourceUser.UserName == username) return BadRequest("You cannot unfollow yourself");
+            
+            var userFollow = await _followingsRepository.GetUserFollow(sourceUserId, followedUser.Id);
+            if(userFollow == null) return BadRequest("You're already not following this user");
+
+            sourceUser.FollowedUsers.Remove(userFollow);
+            if(await _userRepository.SaveAllAsync()) return Ok(); // also should save from followings repo
+            return BadRequest("Failed to unfollow user");
+        }
+        
 
         //TODO: implement unfollow option
     }
