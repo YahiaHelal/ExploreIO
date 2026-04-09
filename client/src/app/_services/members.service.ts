@@ -78,6 +78,17 @@ export class MembersService { // can work as a state store since it's singleton,
     return this.httpClient.delete(this.baseUrl + 'users/delete-photo/' + photoId);
   }
 
+  addFollow(username: string) {
+    return this.httpClient.post(this.baseUrl + 'followings/' + username, {});
+  }
+
+  removeFollow(username: string) {
+    return this.httpClient.delete(this.baseUrl + 'followings/' + username);
+  }
+
+  getFollowings(predicate: string) {
+    return this.httpClient.get(this.baseUrl + 'followings?=' + predicate)
+  }
 
   private getPaginatedResult<T>(url, params) {
     const paginatedResult: PaginatedResult<T>  = new PaginatedResult<T>();
