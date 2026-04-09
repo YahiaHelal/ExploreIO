@@ -15,6 +15,7 @@ export class ErrorInterceptor implements HttpInterceptor {
 
   constructor(private router: Router, private toastr: ToastrService, ) {}
 
+  // BUG: invalid creds throws a 500 error
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
     return next.handle(request).pipe(
       catchError(err => {
