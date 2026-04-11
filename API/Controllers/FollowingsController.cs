@@ -1,6 +1,7 @@
 using API.DTOs;
 using API.Entities;
 using API.Extensions;
+using API.Helpers;
 using API.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -45,9 +46,11 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<FollowDto>>> GetUserFollowings(string predicate)
+        public async Task<ActionResult<IEnumerable<FollowDto>>> GetUserFollowings([FromQuery]FollowingsParams followingsParams)
         {
-            var users = await _followingsRepository.GetUserFollowings(predicate, User.GetUserId());
+            followingsParams.UserId = User.GetUserId();
+            var users = await _followingsRepository.GetUserFollowings(followingsParams);
+            Response.AddPaginationHeader(users.CurrentPage, users.PageSize, users.TotalCount, users.TotalPages);
             return Ok(users);
         }
 

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using API.DTOs;
 using API.Entities;
+using API.Helpers;
 
 namespace API.Interfaces
 {
@@ -11,6 +12,6 @@ namespace API.Interfaces
     {
         Task<UserFollow> GetUserFollow(int sourceUserId, int followedUserId);
         Task<AppUser> GetUserWithFollowings(int userId);
-        Task<IEnumerable<FollowDto>> GetUserFollowings(string predicate, int userId); // follows / follwed by
+        Task<PagedList<FollowDto>> GetUserFollowings(FollowingsParams followingsParams); // follows / follwed by
     }
 }

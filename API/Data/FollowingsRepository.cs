@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using API.DTOs;
 using API.Entities;
 using API.Extensions;
+using API.Helpers;
 using API.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -23,22 +24,22 @@ namespace API.Data
         }
 
         // predicate => either user followers or user followed by 
-        public async Task<IEnumerable<FollowDto>> GetUserFollowings(string predicate, int userId)
+        public async Task<PagedList<FollowDto>> GetUserFollowings(FollowingsParams followingsParams)
         {
             var users = _context.Users.OrderBy(u => u.UserName).AsQueryable(); 
             var followings = _context.Followings.AsQueryable();
             
-            if(predicate == "followed")
+            if(followingsParams.Predicate == "followed")
             {
-                followings = followings.Where(follow => follow.SourceUserId == userId);
+                followings = followings.Where(follow => follow.SourceUserId == followingsParams.UserId);
                 users = followings.Select(follow => follow.FollowedUesr);
             }
-            if(predicate == "followedBy")
+            if(followingsParams.Predicate == "followedBy")
             {
-                followings = followings.Where(follow => follow.FollowedUserId == userId);
+                followings = followings.Where(follow => follow.FollowedUserId == followingsParams.UserId);
                 users = followings.Select(follow => follow.SourceUser);
             }
-            return await users.Select(user => new FollowDto
+            var followedUsers = users.Select(user => new FollowDto
             {
                 Username = user.UserName,
                 KnownAs = user.KnownAs,
@@ -46,7 +47,9 @@ namespace API.Data
                 PhotoUrl = user.Photos.FirstOrDefault(p => p.IsMain).Url,
                 City = user.City,
                 Id = user.Id
-            }).ToListAsync();
+            });
+
+            return await PagedList<FollowDto>.CreateAsync(followedUsers, followingsParams.PageNumber, followingsParams.PageSize);
         }
 
         public async Task<AppUser> GetUserWithFollowings(int userId)
