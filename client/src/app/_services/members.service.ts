@@ -86,8 +86,10 @@ export class MembersService { // can work as a state store since it's singleton,
     return this.httpClient.delete(this.baseUrl + 'followings/' + username);
   }
 
-  getFollowings(predicate: string) {
-    return this.httpClient.get<Partial<Member[]>>(this.baseUrl + 'followings?predicate=' + predicate)
+  getFollowings(predicate: string, pageNumber: number, pageSize: number) {
+    let params = this.getPaginationHeaders(pageNumber,pageSize);
+    params = params.append('predicate', predicate);
+    return this.getPaginatedResult<Partial<Member[]>>(this.baseUrl + 'followings', params);
   }
 
   private getPaginatedResult<T>(url, params) {
