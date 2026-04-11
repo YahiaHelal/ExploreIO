@@ -49,12 +49,13 @@ namespace API.Controllers
             };
         }
 
+        //BUG: invalid user creds throws 500
         [HttpPost("login")]
         public async Task<ActionResult<UserDto>> LoginAsync(LoginDto loginDto) 
         {
             var user = await _context.Users
-            .Include(p => p.Photos)
-            .SingleOrDefaultAsync(u => u.UserName == loginDto.Username.ToLower());
+            .Include(u => u.Photos)
+            .SingleOrDefaultAsync(u => !string.IsNullOrEmpty(loginDto.Username) && u.UserName == loginDto.Username.ToLower());
             if(user == null) return Unauthorized("Invalid Username");
             
             using var hmac = new HMACSHA512(user.PasswordSalt);
