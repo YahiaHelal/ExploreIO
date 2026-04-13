@@ -25,6 +25,9 @@ namespace API.Entities
 
         public ICollection<UserFollow> UserFollowings { get; set; } // users following the current logged in user
         public ICollection<UserFollow> FollowedUsers { get; set; } // users the current user follow
+        public ICollection<Message> MessagesSent { get; set; }
+        public ICollection<Message> MessagesReceived { get; set; }
+
     }
 
 }
