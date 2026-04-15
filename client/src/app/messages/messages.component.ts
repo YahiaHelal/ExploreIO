@@ -9,7 +9,7 @@ import { Message } from '../_models/message';
   styleUrls: ['./messages.component.css']
 })
 export class MessagesComponent implements OnInit {
-  messages: Message[] | undefined;
+  messages: Message[] = [];
   pagination: Pagination | undefined;
   container = 'Outbox';
   pageNumber = 1;
