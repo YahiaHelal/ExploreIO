@@ -65,6 +65,7 @@ namespace API.Controllers
         {
             var currentUsername = User.GetUsername();
             if(currentUsername == username) return BadRequest();
+            if(await _userRepository.GetUserByUsernameAsync(username) == null) return NotFound();
             return Ok(await _messageRepository.GetMessageThread(currentUsername, username));
         }
 
