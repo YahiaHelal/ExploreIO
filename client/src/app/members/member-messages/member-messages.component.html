@@ -1,1 +1,43 @@
-<p *ngFor="let msg of messages">{{msg?.content}}</p>
+<div class="card">
+  <div class="card-body">
+    <div *ngIf="messages?.length === 0">
+      No messages yet... use the message box below to say hi
+    </div>
+
+    <ul *ngIf="messages?.length > 0" class="chat">
+      <li *ngFor="let msg of messages">
+        <div>
+          <span class="chat-img float-right">
+            <img class="img-circle rounded-circle" src="{{msg.senderPhotoUrl || './assets/user.png'}}"
+              alt="{{msg.senderUsername}}">
+          </span>
+          <div class="chat-body">
+            <div class="header">
+              <small class="text-muted">
+                <span class="fa fa-clock-o">{{msg.messageSent | timeago}}</span>
+                <span class="text-danger" *ngIf="!msg.dateRead && msg.senderUsername !== username">
+                  (unread)
+                </span>
+                <span class="text-success" *ngIf="msg.dateRead && msg.senderUsername !== username">
+                  (read {{msg.dateRead | timeago}})
+                </span>
+              </small>
+            </div>
+            <p>{{msg.content}}</p>
+          </div>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <div class="card-footer">
+    <form>
+      <div class="input-group">
+        <input type="text" class="form-control input-sm" placeholder="Dig in, Try your best insult">
+        <div class="input-group-append">
+          <button class="btn btn-primary" type="submit">Insult</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
