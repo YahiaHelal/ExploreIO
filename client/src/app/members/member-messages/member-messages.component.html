@@ -31,11 +31,17 @@
   </div>
 
   <div class="card-footer">
-    <form>
+    <form #messageForm="ngForm" (ngSubmit)="sendMessage()" autocomplete="off">
       <div class="input-group">
-        <input type="text" class="form-control input-sm" placeholder="Dig in, Try your best insult">
+        <input
+          name="messageContent"
+          required
+          [(ngModel)]="messageContent"
+          type="text"
+          class="form-control input-sm"
+          placeholder="Dig in, Try your best insult">
         <div class="input-group-append">
-          <button class="btn btn-primary" type="submit">Insult</button>
+          <button [disabled]="!messageForm.valid" class="btn btn-primary" type="submit">Insult</button>
         </div>
       </div>
     </form>
