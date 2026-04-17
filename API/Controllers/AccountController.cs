@@ -32,11 +32,7 @@ namespace API.Controllers
             
             var user = _mapper.Map<AppUser>(regDto);
 
-            using var hmac = new HMACSHA512();
-        
             user.UserName = regDto.Username.ToLower();
-            user.PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(regDto.Password));
-            user.PasswordSalt = hmac.Key;
             
             _context.Users.Add(user); // track that user with ef
             
@@ -58,13 +54,7 @@ namespace API.Controllers
             .SingleOrDefaultAsync(u => !string.IsNullOrEmpty(loginDto.Username) && u.UserName == loginDto.Username.ToLower());
             if(user == null) return Unauthorized("Invalid Username");
             
-            using var hmac = new HMACSHA512(user.PasswordSalt);
-            var givenHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(loginDto.Password));
             
-            for(int i = 0; i < givenHash.Length; i++)
-            {
-                if(givenHash[i] != user.PasswordHash[i]) return Unauthorized("Invalid Password");
-            }
 
             return new UserDto()
             {
