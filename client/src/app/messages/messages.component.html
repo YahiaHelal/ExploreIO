@@ -24,7 +24,7 @@
       <th style="width: 20%">Sent / Received</th>
       <th style="width: 20%"></th>
     </tr>
-    <tr *ngFor="let msg of messages"
+    <tr [hidden]="loading" *ngFor="let msg of messages"
       routerLink='{{container === "Outbox"
         ? "/members/" + msg.recipientUsername
         : "/members/" + msg.senderUsername}}' [queryParams]="{tab: 3}">
@@ -55,7 +55,7 @@
 </div>
 
 
-<div class="d-flex justify-content-center" *ngIf="pagination">
+<div class="d-flex justify-content-center" *ngIf="pagination && !loading && messages.length > 0">
   <pagination
     [boundaryLinks]="true"
     [totalItems]="pagination.totalItems"
