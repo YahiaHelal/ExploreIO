@@ -1,29 +1,24 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography;
-using System.Text;
 using System.Text.Json;
-using System.Threading.Tasks;
 using API.Entities;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace API.Data
 {
     public class Seed
     {
-        public static async Task SeedUsersAsync(DataContext context)
+        public static async Task SeedUsersAsync(UserManager<AppUser> userManager)
         {
-            if(await context.Users.AnyAsync()) return;
+            if(await userManager.Users.AnyAsync()) return;
             var userData = await File.ReadAllTextAsync("Data/UserSeedData.json");
             var users = JsonSerializer.Deserialize<List<AppUser>>(userData);
+            
             foreach(var user in users)
             {
                 user.UserName = user.UserName.ToLower();
-                context.Users.Add(user);
+                var res = await userManager.CreateAsync(user, "Pa$$woords123");
+                Console.WriteLine(res);
             }
-            await context.SaveChangesAsync();
-
         }
     }
 }
