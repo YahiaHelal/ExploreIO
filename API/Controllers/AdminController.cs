@@ -33,6 +33,8 @@ namespace API.Controllers
             return Ok(users);
         }
 
+        // TODO: grab members only / moderators only
+
         [Authorize("RequireAdminRole")]
         [HttpPost("edit-roles/{username}")]
         public async Task<ActionResult> EditRoles(string username, [FromQuery] string roles)
