@@ -30,8 +30,14 @@ namespace API.Extensions
                     ValidateIssuerSigningKey = true,
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["TokenKey"])),
                     ValidateIssuer = false, // api server
-                    ValidateAudience = false, // client (angular application)
+                    ValidateAudience = false, // client (angular)
                 };
+            });
+            
+            services.AddAuthorization(ops =>
+            {
+                ops.AddPolicy("RequireAdminRole", policy => policy.RequireRole("Admin"));
+                ops.AddPolicy("ModeratePhotoRole", policy => policy.RequireRole("Admin", "Moderator"));
             });
             return services;
         }
