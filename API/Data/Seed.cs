@@ -16,8 +16,7 @@ namespace API.Data
             foreach(var user in users)
             {
                 user.UserName = user.UserName.ToLower();
-                var res = await userManager.CreateAsync(user, "Pa$$woords123");
-                Console.WriteLine(res);
+                await userManager.CreateAsync(user, "Pa$$woords123");
             }
         }
     }
