@@ -3,7 +3,7 @@ export interface User {
   token: string;
   photoUrl: string;
   knownAs: string;
-  roles: string[]
+  roles: string[];
 }
 
 
