@@ -40,7 +40,7 @@ namespace API.SignalR
 
         public async Task SendMessage(CreateMessageDto createMessageDto)
         {
-              var username = Context.User.GetUsername();
+            var username = Context.User.GetUsername();
             if(username == createMessageDto.RecipientUsername.ToLower())
                 throw new HubException("You cannot send message to yourself");
             
