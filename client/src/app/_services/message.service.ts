@@ -32,11 +32,13 @@ export class MessageService {
     this.hubConn.on('ReceiveMessageThread', messages => {
       this.msgThreadSrc.next(messages)
     })
-    
+
   }
 
   stopHubConnection() {
-    this.hubConn?.stop();
+    if(this.hubConn) {
+      this.hubConn?.stop();
+    }
   }
 
   getMessages(pageNumber: number, pageSize: number, container: string) {
