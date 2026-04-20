@@ -32,6 +32,21 @@ namespace API.Extensions
                     ValidateIssuer = false, // api server
                     ValidateAudience = false, // client (angular)
                 };
+
+                options.Events = new JwtBearerEvents
+                {
+                    OnMessageReceived = ctx =>
+                    {
+                        var accessToken = ctx.Request.Query["access_token"]; // sent by signalR
+
+                        var path = ctx.HttpContext.Request.Path;
+                        if(!string.IsNullOrEmpty(accessToken) && path.StartsWithSegments("/hubs"))
+                        {
+                            ctx.Token = accessToken;
+                        }
+                        return Task.CompletedTask;
+                    }
+                };
             });
             
             services.AddAuthorization(ops =>
