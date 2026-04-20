@@ -19,7 +19,7 @@ namespace API.SignalR
             await Clients.Others.SendAsync("UserIsOnline", Context.User.GetUsername()); // web sockets does not send headers, rather query strings
 
             var currUsers = await _tracker.GetOnlineUsers();
-            await Clients.All.SendCoreAsync("GetOnlineUsers", currUsers);
+            await Clients.All.SendAsync("GetOnlineUsers", currUsers);
         }
 
         public override async Task OnDisconnectedAsync(Exception ex)
@@ -28,7 +28,7 @@ namespace API.SignalR
             await Clients.Others.SendAsync("UserIsOffline", Context.User.GetUsername());
             
             var currUsers = await _tracker.GetOnlineUsers();
-            await Clients.All.SendCoreAsync("GetOnlineUsers", currUsers);
+            await Clients.All.SendAsync("GetOnlineUsers", currUsers);
 
             await base.OnDisconnectedAsync(ex);
         }
