@@ -9,12 +9,12 @@ import { MessageService } from 'src/app/_services/message.service';
   styleUrls: ['./member-messages.component.css']
 })
 export class MemberMessagesComponent implements OnInit {
-  @ViewChild('messageForm') mesageForm: NgForm;
-  @Input() messages: Message[];
-  @Input() username: string;
-  messageContent: string;
+  @ViewChild('messageForm') mesageForm?: NgForm;
+  @Input() messages?: Message[];
+  @Input() username?: string;
+  messageContent?: string;
 
-  constructor(private messageService: MessageService) { }
+  constructor(public messageService: MessageService) { }
 
   ngOnInit(): void {
   }
