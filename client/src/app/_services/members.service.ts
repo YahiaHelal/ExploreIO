@@ -16,7 +16,7 @@ import { getPaginatedResult, getPaginationHeaders } from './paginationHelper';
 export class MembersService { // can work as a state store since it's singleton, instead of using redux
   private baseUrl = environment.apiUrl;
   members: Member[] = [];
-  userParams: UserParams | undefined;
+  userParams?: UserParams;
   membersCache = new Map();
 
   constructor(private httpClient: HttpClient, private accountService: AccountService) {
@@ -29,7 +29,7 @@ export class MembersService { // can work as a state store since it's singleton,
     return this.userParams;
   }
 
-  setUserParams(userParams: UserParams) {
+  setUserParams(userParams?: UserParams) {
     this.userParams = userParams;
   }
   resetUserParams() {

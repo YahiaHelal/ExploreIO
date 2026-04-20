@@ -1,5 +1,6 @@
 using API.Extensions;
 using API.Middleware;
+using API.SignalR;
 namespace API
 {
     public class Startup
@@ -20,6 +21,7 @@ namespace API
             services.AddControllers();
             services.AddCors(); // Cross-Origin-Resource-Sharing policy
             services.AddIdentityServices(_config);
+            services.AddSignalR();
         }
 
         // Gets called by runtime, use it to configure Http request pipeline
@@ -45,6 +47,7 @@ namespace API
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHub<PresenceHub>("hubs/presence");
             });
         }
     }

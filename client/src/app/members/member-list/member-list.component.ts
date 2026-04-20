@@ -12,8 +12,8 @@ import { MembersService } from 'src/app/_services/members.service';
 })
 export class MemberListComponent implements OnInit {
   members: Member[] = [];
-  pagination: Pagination | undefined;
-  userParams: UserParams | undefined;
+  pagination?: Pagination;
+  userParams?: UserParams;
 
   constructor(private membersService: MembersService) {
     this.userParams = this.membersService.getUserParams();
