@@ -81,10 +81,10 @@ namespace API.Data
                 .Include(m => m.Sender).ThenInclude(u => u.Photos)
                 .Include(m => m.Recipient).ThenInclude(u => u.Photos)
                 .Where(
-                    m => m.RecipientUsername  == currentUsername && !m.RecipientDeleted
-                    && m.Sender.UserName == recipientUsername
-                    || m.Recipient.UserName == recipientUsername
-                    && m.Sender.UserName == currentUsername && !m.SenderDeleted
+                    m => (m.RecipientUsername  == currentUsername && m.RecipientDeleted == false
+                    && m.Sender.UserName == recipientUsername)
+                    || (m.Recipient.UserName == recipientUsername
+                    && m.Sender.UserName == currentUsername && m.SenderDeleted == false)
                 )
                 .OrderBy(m => m.MessageSent)
                 .ToListAsync();
@@ -95,7 +95,8 @@ namespace API.Data
             {
                 foreach (var msg in unreadMessages)
                 {
-                    msg.DateRead = DateTime.Now;
+                    // System.Globalization.CultureInfo.CurrentCulture.ClearCachedData();
+                    msg.DateRead = DateTime.UtcNow;
                 }
                 await _context.SaveChangesAsync();
             }

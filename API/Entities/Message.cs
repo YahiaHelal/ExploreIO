@@ -12,7 +12,7 @@ namespace API.Entities
 
         public string Content { get; set; }
         public DateTime? DateRead { get; set; }
-        public DateTime MessageSent { get; set; } = DateTime.Now;
+        public DateTime MessageSent { get; set; } = DateTime.UtcNow;
         public bool SenderDeleted { get; set; }
         public bool RecipientDeleted { get; set; }
         // message will be deleted from the chat iff both sender and recipient have deleted the message
