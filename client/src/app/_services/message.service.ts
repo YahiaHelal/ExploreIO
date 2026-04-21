@@ -11,6 +11,8 @@ import { take } from 'rxjs/operators';
 @Injectable({
   providedIn: 'root'
 })
+
+// BUG: message state inconsistency
 export class MessageService {
   baseUrl = environment.apiUrl
   hubUrl = environment.hubUrl;
