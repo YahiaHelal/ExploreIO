@@ -25,8 +25,8 @@ namespace API.SignalR
             var otherUser = httpCtx.Request.Query["user"].ToString();
             
             var gName = GetGroupName(Context.User.GetUsername(), otherUser);
-
             await Groups.AddToGroupAsync(Context.ConnectionId, gName); 
+            await AddToGroup(gName);
 
             var messages = await _messageRepository.GetMessageThread(Context.User.GetUsername(), otherUser);
 
@@ -35,6 +35,7 @@ namespace API.SignalR
 
         public override async Task OnDisconnectedAsync(Exception ex)
         {
+            await RemoveFromMsgGroup();
             await base.OnDisconnectedAsync(ex);
         }
 
@@ -49,7 +50,7 @@ namespace API.SignalR
 
             if(recipient == null) throw new HubException("User not found");
 
-            var message = new Message
+            var msg = new Message
             {
                 Sender = sender,
                 Recipient = recipient,
@@ -57,13 +58,42 @@ namespace API.SignalR
                 RecipientUsername = recipient.UserName,
                 Content = createMessageDto.Content
             };
-            _messageRepository.AddMessage(message);
+            
+            var gName = GetGroupName(sender.UserName, recipient.UserName);
+            var g = await _messageRepository.GetMessageGroupAsync(gName);
+
+            if(g.Connections.Any(c => c.Username == recipient.UserName))
+            {
+                msg.DateRead = DateTime.UtcNow; // different timezones bug
+            }
+
+            _messageRepository.AddMessage(msg);
 
             if(await _messageRepository.SaveAllAsync())
             {
-                var group = GetGroupName(sender.UserName, recipient.UserName);
-                await Clients.Group(group).SendAsync("NewMessage", _mapper.Map<MessageDto>(message));
+                await Clients.Group(gName).SendAsync("NewMessage", _mapper.Map<MessageDto>(msg));
             }
+        }
+
+        private async Task<bool> AddToGroup(string gName)
+        {
+            var g = await _messageRepository.GetMessageGroupAsync(gName);
+            var conn = new Connection(Context.ConnectionId, Context.User.GetUsername());
+
+            if(g == null)
+            {
+                g = new Group(gName);
+                _messageRepository.AddGroup(g);
+            }
+            g.Connections.Add(conn);
+            return await _messageRepository.SaveAllAsync();
+        }
+
+        private async Task RemoveFromMsgGroup()
+        {
+            var conn = await _messageRepository.GetConnectionAsync(Context.ConnectionId);
+            _messageRepository.removeConn(conn);
+            await _messageRepository.SaveAllAsync();
         }
 
         private string GetGroupName(string caller, string other) // each group will be identified by [username1, username2] holding a pair of users
