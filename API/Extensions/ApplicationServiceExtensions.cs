@@ -3,7 +3,6 @@ using API.Helpers;
 using API.Interfaces;
 using API.Services;
 using API.SignalR;
-using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 
 namespace API.Extensions
@@ -18,10 +17,10 @@ namespace API.Extensions
             services.AddScoped<IPhotoService, PhotoService>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<LogUserActivity>();
-            services.AddAutoMapper(typeof(AutoMapperProfiles).Assembly);
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.AddDbContext<DataContext>(options =>
             {
-                options.UseSqlite(config.GetConnectionString("DefaultConnection"));
+                options.UseNpgsql(config.GetConnectionString("DefaultConnection"));
             });
             return services;
         }
