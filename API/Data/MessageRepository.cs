@@ -69,7 +69,7 @@ namespace API.Data
         {
             var query = _context.Messages
                 .OrderByDescending(m => m.MessageSent)
-                .ProjectTo<MessageDto>(_mapper.ConfigurationProvider)
+                // .ProjectTo<MessageDto>(_mapper.ConfigurationProvider)
                 .AsQueryable();
             
             query = messageParams.Container switch
@@ -79,7 +79,9 @@ namespace API.Data
                 _ => query.Where(u => u.RecipientUsername == messageParams.Username && !u.RecipientDeleted && u.DateRead == null) // Unread messages
             };
 
-            return await PagedList<MessageDto>.CreateAsync(query, messageParams.PageNumber, messageParams.PageSize);
+            var msg = query.ProjectTo<MessageDto>(_mapper.ConfigurationProvider);
+
+            return await PagedList<MessageDto>.CreateAsync(msg, messageParams.PageNumber, messageParams.PageSize);
 
         }
 
