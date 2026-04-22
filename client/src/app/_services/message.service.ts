@@ -7,12 +7,12 @@ import { HubConnection, HubConnectionBuilder } from '@microsoft/signalr';
 import { User } from '../_models/user';
 import { BehaviorSubject } from 'rxjs';
 import { take } from 'rxjs/operators';
+import { Group } from '../_models/group';
 
 @Injectable({
   providedIn: 'root'
 })
 
-// BUG: message state inconsistency
 export class MessageService {
   baseUrl = environment.apiUrl
   hubUrl = environment.hubUrl;
@@ -40,6 +40,19 @@ export class MessageService {
       this.msgThread$.pipe(take(1)).subscribe(messages => {
         this.msgThreadSrc.next([...messages, msg]); // without mutating the state
       })
+    })
+
+    this.hubConn.on('UpdatedGroup', (group: Group) => {
+      if(group.connections.some(x => x.username === otherUser)) {
+        this.msgThread$.pipe(take(1)).subscribe(messages => {
+          messages.forEach(msg => {
+            if(!msg.dateRead) {
+              msg.dateRead = new Date(Date.now());
+            }
+          })
+          this.msgThreadSrc.next([...messages])
+        })
+      }
     })
   }
 

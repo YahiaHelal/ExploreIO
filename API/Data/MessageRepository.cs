@@ -42,6 +42,14 @@ namespace API.Data
             return await _context.Connections.FindAsync(connId);
         }
 
+        public async Task<Group> GetGroupForConnectionAsync(string connId)
+        {
+            return await _context.Groups
+                .Include(c => c.Connections)
+                .Where(c => c.Connections.Any(x => x.ConnectionId == connId))
+                .FirstOrDefaultAsync();
+        }
+
         public async Task<Message> GetMessage(int id)
         {
             return await _context.Messages

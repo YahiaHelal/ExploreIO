@@ -10,6 +10,7 @@ namespace API.Interfaces
         void removeConn(Connection conn);
         Task<Connection> GetConnectionAsync(string connId);
         Task<Group> GetMessageGroupAsync(string gName);
+        Task<Group> GetGroupForConnectionAsync(string connId);
         void AddMessage(Message message);
         void DeleteMessage(Message message);
         Task<Message> GetMessage(int id);
