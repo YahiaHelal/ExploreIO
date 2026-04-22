@@ -8,6 +8,7 @@ import { User } from '../_models/user';
 import { BehaviorSubject } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { Group } from '../_models/group';
+import { BusyService } from './busy.service';
 
 @Injectable({
   providedIn: 'root'
@@ -20,10 +21,10 @@ export class MessageService {
   private msgThreadSrc = new BehaviorSubject<Message[]>([]);
   msgThread$ = this.msgThreadSrc.asObservable();
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private busyService: BusyService) { }
 
   createHubConnection(user: User, otherUser: string) {
-
+    this.busyService.busy();
     this.hubConn = new HubConnectionBuilder()
       .withUrl(this.hubUrl + 'message?user=' + otherUser, {
         accessTokenFactory: () => user.token
@@ -31,7 +32,7 @@ export class MessageService {
       .withAutomaticReconnect()
       .build();
 
-    this.hubConn.start().catch(err => console.log(err));
+    this.hubConn.start().catch(err => console.log(err)).finally(() => this.busyService.idle());
 
     this.hubConn.on('ReceiveMessageThread', msg => {
       this.msgThreadSrc.next(msg)

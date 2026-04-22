@@ -86,8 +86,8 @@ namespace API.Data
         public async Task<IEnumerable<MessageDto>> GetMessageThread(string currentUsername, string recipientUsername)
         {
             var messages = await _context.Messages
-                .Include(u => u.Sender)
-                .Include(u => u.Recipient)
+                .Include(u => u.Sender).ThenInclude(s => s.Photos)
+                .Include(u => u.Recipient).ThenInclude(r => r.Photos)
                 .Where(
                     m => (m.RecipientUsername  == currentUsername && !m.RecipientDeleted
                     && m.Sender.UserName == recipientUsername)
