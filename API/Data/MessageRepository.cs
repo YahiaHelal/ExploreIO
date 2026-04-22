@@ -106,7 +106,6 @@ namespace API.Data
                     // System.Globalization.CultureInfo.CurrentCulture.ClearCachedData();
                     msg.DateRead = DateTime.UtcNow;
                 }
-                await _context.SaveChangesAsync();
             }
 
             return _mapper.Map<IEnumerable<MessageDto>>(messages);
@@ -117,9 +116,5 @@ namespace API.Data
             _context.Connections.Remove(conn);  
         }
 
-        public async Task<bool> SaveAllAsync()
-        {
-            return await _context.SaveChangesAsync() > 0;
-        }
     }
 }
