@@ -6,8 +6,8 @@ namespace API.Entities
     {
         public DateTime DateOfBirth { get; set; }
         public string KnownAs { get; set; }
-        public DateTime CreatedAt { get; set; } = DateTime.Now;
-        public DateTime LastActive { get; set; } = DateTime.Now;
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        public DateTime LastActive { get; set; } = DateTime.UtcNow; // BUG: shows future timings ?? (i hate dealing with dates)
         public string Gender { get; set; }
         public string Introduction { get; set; }
         public string Interests { get; set; }

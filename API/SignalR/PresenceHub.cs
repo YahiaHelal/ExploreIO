@@ -15,21 +15,20 @@ namespace API.SignalR
         }
         public override async Task OnConnectedAsync()
         {
-            await _tracker.UserConnected(Context.User.GetUsername(), Context.ConnectionId);
-            await Clients.Others.SendAsync("UserIsOnline", Context.User.GetUsername()); // web sockets does not send headers, rather query strings
+            var isOnline = await _tracker.UserConnected(Context.User.GetUsername(), Context.ConnectionId);
+            if(isOnline) // instead of sending to every user
+                await Clients.Others.SendAsync("UserIsOnline", Context.User.GetUsername());
 
             var currUsers = await _tracker.GetOnlineUsers();
-            await Clients.All.SendAsync("GetOnlineUsers", currUsers);
+            await Clients.Caller.SendAsync("GetOnlineUsers", currUsers);
         }
 
         public override async Task OnDisconnectedAsync(Exception ex)
         {
-            await _tracker.UserDisconnected(Context.User.GetUsername(), Context.ConnectionId);
-            await Clients.Others.SendAsync("UserIsOffline", Context.User.GetUsername());
+            var isOffline = await _tracker.UserDisconnected(Context.User.GetUsername(), Context.ConnectionId);
+            if(isOffline) 
+                await Clients.Others.SendAsync("UserIsOffline", Context.User.GetUsername());
             
-            var currUsers = await _tracker.GetOnlineUsers();
-            await Clients.All.SendAsync("GetOnlineUsers", currUsers);
-
             await base.OnDisconnectedAsync(ex);
         }
     }
