@@ -70,7 +70,7 @@ namespace API.SignalR
 
             if(g.Connections.Any(c => c.Username == recipient.UserName))
             {
-                msg.DateRead = DateTime.UtcNow;
+                msg.DateRead = DateTime.UtcNow; 
             }else
             {
                 var conns = await _tracker.GetConnectionsForUser(recipient.UserName);

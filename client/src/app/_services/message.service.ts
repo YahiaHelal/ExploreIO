@@ -16,13 +16,14 @@ import { Group } from '../_models/group';
 export class MessageService {
   baseUrl = environment.apiUrl
   hubUrl = environment.hubUrl;
-  private hubConn?: HubConnection;
+  private hubConn: HubConnection;
   private msgThreadSrc = new BehaviorSubject<Message[]>([]);
   msgThread$ = this.msgThreadSrc.asObservable();
 
   constructor(private http: HttpClient) { }
 
   createHubConnection(user: User, otherUser: string) {
+
     this.hubConn = new HubConnectionBuilder()
       .withUrl(this.hubUrl + 'message?user=' + otherUser, {
         accessTokenFactory: () => user.token
@@ -58,6 +59,7 @@ export class MessageService {
 
   stopHubConnection() {
     if(this.hubConn) {
+      this.msgThreadSrc.next([]);
       this.hubConn?.stop();
     }
   }
