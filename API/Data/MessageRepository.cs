@@ -69,6 +69,7 @@ namespace API.Data
         {
             var query = _context.Messages
                 .OrderByDescending(m => m.MessageSent)
+                // .ProjectTo<MessageDto>(_mapper.ConfigurationProvider)
                 .AsQueryable();
             
             query = messageParams.Container switch

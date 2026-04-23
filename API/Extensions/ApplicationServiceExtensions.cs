@@ -20,36 +20,9 @@ namespace API.Extensions
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.AddDbContext<DataContext>(options =>
             {
-                var databaseUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
-                
-                string connStr;
-
-                if (string.IsNullOrEmpty(databaseUrl))
-                {
-                    // local dev
-                    connStr = config.GetConnectionString("DefaultConnection");
-                }
-                else
-                {
-                    var uri = new Uri(databaseUrl);
-
-                    var userInfo = uri.UserInfo.Split(':');
-                    var user = userInfo[0];
-                    var password = userInfo[1];
-
-                    connStr = $"Host={uri.Host};" +
-                            $"Port={uri.Port};" +
-                            $"Database={uri.AbsolutePath.Trim('/')};" +
-                            $"Username={user};" +
-                            $"Password={password};" +
-                            $"SSL Mode=Require;" +
-                            $"Trust Server Certificate=true";
-                }
-
-                options.UseNpgsql(connStr);
+                options.UseNpgsql(config.GetConnectionString("DefaultConnection"));
             });
             return services;
         }
     }
 }
-
