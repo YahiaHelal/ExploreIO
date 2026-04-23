@@ -1,0 +1,10 @@
+**/bin/
+**/obj/
+**/.vs/
+**/node_modules/
+**/dist/
+**/.angular/
+.git/
+.gitignore
+*.md
+**/ssl/
