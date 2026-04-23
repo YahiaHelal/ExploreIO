@@ -38,10 +38,12 @@ namespace API
                     .AllowAnyHeader()
                     .AllowAnyMethod()
                     .AllowCredentials()
-                    .WithOrigins("https://localhost:4200"); // allow requests from your client
-                //allow any header: authentication, ...
-                //allow any method: post, get, put ... 
-                //withOrigin: address of the client origin
+                    .WithOrigins(
+                        "https://localhost:4200",  // Development
+                        "http://localhost:4200"     // Development (HTTP)
+                        // Add your Render URL here after deployment:
+                        // "https://your-app-name.onrender.com"
+                    );
             }); // CORS policy
 
             
