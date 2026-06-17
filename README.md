@@ -4,7 +4,7 @@ A real-time messaging application with user profiles and social following. Built
 
 ## Demo
 
-<video controls src="Demo/ExploreIO-Demo.mp4" title="Title"></video>
+[<video controls src="Demo/ExploreIO-Demo.mp4" title="Title"></video>](https://github.com/user-attachments/assets/d971315e-3de6-49eb-8850-7377ec15a16b)
 
 ## Overview
 
