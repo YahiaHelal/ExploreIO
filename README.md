@@ -1,73 +1,63 @@
 # ExploreIO
 
-A fullstack real-time chat application with user profiles, messaging, and social following features. Built with ASP.NET Core and Angular.
+A real-time messaging application with user profiles and social following. Built with ASP.NET Core and Angular.
+
+## Demo
+
+<video controls src="Demo/ExploreIO-Demo.mp4" title="Title"></video>
 
 ## Overview
 
-ExploreIO is a social messaging platform that enables users to create profiles, discover other users, follow them, and exchange real-time messages. The application provides a responsive interface for browsing members, managing connections, and maintaining conversations with pagination and presence tracking.
-
-**Target Users:** Developers and teams looking for a reference implementation of a modern fullstack chat system with authentication, real-time communication, and social features.
+ExploreIO enables real-time direct messaging between users with persistent message storage, user presence tracking, and profile management. Users can discover and follow other members, exchange messages instantly via WebSockets, and manage their conversations with soft deletion support.
 
 ## Features
 
-- **User Authentication & Authorization**
-  - JWT-based authentication
-  - Role-based access control (user and admin roles)
-  - Identity management with ASP.NET Core Identity
-
 - **Real-Time Messaging**
+  - Instant message delivery via SignalR WebSockets
   - Direct messaging between users
-  - Message persistence with soft deletion
-  - Real-time delivery via SignalR WebSockets
-  - Message thread management
+  - Message persistence and soft deletion
+  - Message thread management with pagination
 
-- **Social Features**
-  - User profiles with photos and personal information
-  - Follow/unfollow functionality
-  - User discovery and browsing
-  - Activity tracking (last active timestamps)
+- **User Authentication**
+  - JWT-based authentication
+  - Role-based access control
+  - ASP.NET Core Identity integration
 
-- **Media Handling**
-  - Profile photo uploads
-  - Cloudinary integration for image storage
-  - Photo management per user
+- **User Profiles & Discovery**
+  - User profiles with photos and bio information
+  - Follow/unfollow system
+  - User search and browsing
+  - Online presence tracking
 
-- **User Experience**
-  - Pagination for messages, users, and followers
-  - Real-time presence tracking
-  - Responsive UI with Bootstrap and Bootswatch themes
-  - Toast notifications and loading indicators
+- **Media Management**
+  - Profile photo uploads via Cloudinary
+  - Multi-photo support per user
 
 ## System Architecture
 
-### High-Level Overview
-
-The application follows a client-server architecture with clear separation of concerns:
+The application uses a client-server architecture with real-time communication:
 
 **Frontend (Angular SPA)**
-- Communicates with the backend via HTTP REST API for CRUD operations
-- Establishes WebSocket connections through SignalR hubs for real-time features (messaging, presence)
-- Uses route guards for authentication and authorization
-- Implements interceptors for JWT token management and error handling
+- REST API calls for CRUD operations
+- SignalR WebSocket connections for real-time messaging and presence
+- JWT authentication via HTTP interceptors
+- Route guards for protected routes
 
 **Backend (ASP.NET Core Web API)**
-- RESTful API following standard HTTP conventions
+- RESTful endpoints for user management, messages, and follows
+- SignalR hubs for bidirectional real-time communication
 - Repository pattern with Unit of Work for data access
-- SignalR hubs for real-time bidirectional communication
-- JWT middleware for request authentication
-- AutoMapper for DTO transformations
+- JWT middleware for authentication
 
 **Data Flow**
-1. Client sends HTTP requests to REST endpoints (authentication, CRUD operations)
-2. Controllers validate requests and delegate to repositories via Unit of Work
-3. Repositories interact with Entity Framework Core DbContext
-4. Database changes trigger SignalR hub notifications to connected clients
-5. Real-time updates flow through WebSocket connections back to clients
+1. HTTP requests → Controllers → Repositories → EF Core → PostgreSQL
+2. Database changes → SignalR hubs → WebSocket broadcast → Connected clients
+3. Real-time events (new messages, presence updates) pushed via WebSockets
 
-**Communication Patterns**
-- **REST API**: Standard CRUD operations, pagination, filtering
-- **SignalR WebSockets**: Real-time messaging, presence updates, notifications
-- **JWT Authentication**: Stateless token-based auth across all requests
+**Communication**
+- REST API for CRUD operations
+- SignalR WebSockets for messaging and presence
+- JWT tokens for stateless authentication
 
 ## Tech Stack
 
@@ -79,8 +69,8 @@ The application follows a client-server architecture with clear separation of co
 - **State Management:** RxJS
 
 ### Backend
-- **Framework:** ASP.NET Core (.NET 10)
-- **ORM:** Entity Framework Core 10
+- **Framework:** ASP.NET Core (.NET 8)
+- **ORM:** Entity Framework Core 8
 - **Authentication:** ASP.NET Core Identity, JWT Bearer tokens
 - **Real-Time:** SignalR
 - **Mapping:** AutoMapper
@@ -91,7 +81,7 @@ The application follows a client-server architecture with clear separation of co
 - **Development:** SQLite (optional for local development)
 
 ### Development Tools
-- **API Documentation:** Swagger/OpenAPI
+- **API Testing:** Postman
 - **Version Control:** Git
 
 ## Project Structure
@@ -99,7 +89,7 @@ The application follows a client-server architecture with clear separation of co
 ```
 ExploreIO/
 │
-├── API/                          # Backend ASP.NET Core project
+├── API/                          
 │   ├── Controllers/              # API endpoints
 │   │   ├── AccountController.cs  # Authentication (login, register)
 │   │   ├── MessagesController.cs # Message CRUD operations
@@ -131,7 +121,10 @@ ExploreIO/
 │   ├── Extensions/               # Service configuration extensions
 │   └── Helpers/                  # Utilities (pagination, automapper profiles)
 │
-└── client/                       # Frontend Angular application
+├── Demo/
+│   └── ExploreIO-Demo.mp4        # Application demo video
+│
+└── client/                       
     └── src/
         └── app/
             ├── _guards/          # Route guards (auth, admin)
@@ -150,7 +143,7 @@ ExploreIO/
 
 ### Prerequisites
 
-- **.NET SDK 10.0** or higher
+- **.NET SDK 8.0** or higher
 - **Node.js 14.x** or higher (with npm)
 - **PostgreSQL 12** or higher
 - **Angular CLI** (`npm install -g @angular/cli@12`)
@@ -271,27 +264,20 @@ All endpoints except `/account/register` and `/account/login` require JWT authen
 
 ## Known Issues / Limitations
 
-- **Date/Time Handling:** The `LastActive` timestamp may display incorrect future times in some timezones (noted in `AppUser.cs`). This is a known issue with UTC conversion.
 - **Legacy Node.js Setup:** The frontend requires `NODE_OPTIONS=--openssl-legacy-provider` due to Angular 12 and older OpenSSL compatibility issues.
 - **No Message Editing:** Messages can only be deleted (soft deletion), not edited after sending.
-- **Single Photo Upload:** Users can upload multiple photos, but there's no built-in UI for batch uploads.
 - **No Email Verification:** User registration does not include email verification.
 - **CORS Configuration:** Hardcoded to `https://localhost:4200` in development. Requires update for production deployment.
 
 ## Future Improvements
 
-- [ ] Implement message editing functionality
-- [ ] Add email verification and password reset flows
-- [ ] Implement group chat/channels
-- [ ] Add read receipts and typing indicators
-- [ ] Migrate to Angular 15+ for better performance and modern tooling
-- [ ] Add end-to-end encryption for messages
-- [ ] Implement comprehensive unit and integration tests
-- [ ] Add Redis caching for frequently accessed data
-- [ ] Implement full-text search for users and messages
-- [ ] Add WebRTC support for voice/video calls
-- [ ] Dockerize the application for easier deployment
-- [ ] Implement CI/CD pipeline
+- Message editing and reactions
+- Group messaging and channels
+- Read receipts and typing indicators
+- Message search functionality
+- Voice/video calling (WebRTC)
+- End-to-end encryption
+- Mobile applications (iOS/Android)
 
 ## Contributing
 
@@ -308,11 +294,3 @@ Contributions are welcome! Please follow these guidelines:
 - Add comments for complex logic
 - Update documentation for new features
 - Test your changes locally before submitting
-
-## License
-
-This project does not currently have a specified license. Please contact the repository owner for usage permissions.
-
----
-
-**Repository:** [https://github.com/YahiaHelal/ExploreIO](https://github.com/YahiaHelal/ExploreIO)
